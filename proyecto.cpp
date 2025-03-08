@@ -197,53 +197,147 @@ void ListV4<T>::deleteNode(iterator i)
 	delete i;
 }
 
-struct Rune {
-	int x;
-	ListV4<int> y;
-	ListV4<float> z;
+/*struct Wizard:Spell{
+    string nombre;
+};*/
 
-	Rune(int x, int y, float z) {
-		this->x = x;
-		this->y.insert(this->y.last(), y, false);
-        this->z.insert(this->z.last(), z, false);
-	}
+struct Rune {
+	char type;
+
+    Rune(char t = '\0') : type(t) {}
 };
 
 struct Spell{
-	string name;	
+	string spellName;
+	string wizardName;
 	ListV4<Rune> runes;
-    
-};
+    int** matrix;
+	int size;
 
-struct Wizard:Spell{
-    string nombre;
+	Spell(string name = "", string wizard = "") : spellName(name), wizardName(wizard), matrix(nullptr), size(0) {}
+
+	~Spell(){
+		clearMatrix();
+	}
+
+	void addRune(char type) {
+		runes.insert(runes.last(), Rune(type), false);
+		size++;
+
+		if (matrix == nullptr) {
+			allocateMatrix();
+		}
+	}
+
+	void allocateMatrix() {
+		if (size <= 0) {
+			return;
+		}
+		matrix = new int*[size];
+		for (int i = 0; i < size; i++) {
+			matrix[i] = new int[size]();
+		}	
+	}
+
+	void clearMatrix() {
+        if (matrix) {
+            for (int i = 0; i < size; ++i) {
+                delete[] matrix[i];
+            }
+            delete[] matrix;
+            matrix = nullptr;
+        }
+    }
+
+	void printMatrix() {
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+	void printRunes() {
+        ListV4<Rune>::iterator it = runes.first();
+        while (it != nullptr) {
+            cout << runes.get(it)->type << " ";
+            runes.next(it);
+        }
+        cout << endl;
+    }
+
+	void addEdge(int x, int y, int z) {
+		matrix[x-1][y-1] = z;
+		matrix[y-1][x-1] = z;
+	}
 };
 
 class Arcane{
+	public:
     ListV4<Spell> legalSpells;
 	ListV4<Spell> illegalSpells;
-    ListV4<Wizard> underInvestigation;
-    public:
-	void longestPathByEdge(Spell spell, bool first = true){
+    ListV4<string> underInvestigation;
 
+	void longestPathByEdge(Spell spell, bool first = true){
+		/*
 		if (it == nullptr) return;
 
         if (!first) {
 			if (it == spell.runes.first()) 
 		}
+		*/
     }
-    
-}
-void readFile(){
 
-}
+	void readFile() {
+		int n_spells, n_vertex, n_edges, x, y, z;
+		string name, rune;
+		ifstream file;
+	
+		file.open("spellList.in");
+		if (!file.is_open()) {
+			cout << "Error al abrir el archivo" << endl;
+			exit(1);
+		}
+		
+		ListV4<Spell>::iterator it = legalSpells.first();
+		while(!file.eof()){
+			Spell aux;
+			file>>n_spells;
+			file.ignore();
+			getline(file,name);
+			aux.wizardName = name;
+			file>>n_vertex;
+			file.ignore();
+			getline(file,rune);
+			char c;
+			int i = 0;
+			while (true) {
+				c = rune[i];
+				if (c == '\0') break;
+				aux.addRune(c);
+				i++;
+			}
+			aux.allocateMatrix();
+			file>>n_edges;
+			file.ignore();
+			for(int i=0;i<n_edges;i++){
+				file>>x>>y>>z;
+				if (aux.size > 0) aux.addEdge(x, y, z);
+			}
+			legalSpells.insert(legalSpells.last(), aux, false);
+		}
+		file.close();
+	}   
+};
+
 
 void writeFile(){
-
+	
 }
 
 int main(){
-
+	/*
     ListV4<int> a;
     a.insert(a.first(), 2, false);
     a.insert(a.first(), 1, false);
@@ -271,7 +365,17 @@ int main(){
         b.next(it);
     }
 
-    
+    */
+	Arcane arcane;
+	arcane.readFile();
+	ListV4<Spell>::iterator it = arcane.legalSpells.first();
+	Spell* auxPtr = arcane.legalSpells.get(it);
+
+	if (auxPtr) {
+		cout << auxPtr->wizardName << endl;
+		auxPtr->printRunes();
+		auxPtr->printMatrix();
+	}
 
     return 0;
 }
