@@ -92,9 +92,9 @@ ListV4<T>::ListV4()
 template<typename T>
 ListV4<T>::~ListV4()
 {
-	while (!this->isEmpty()) {
+	/*while (!this->isEmpty()) {
 		this->deleteNode(this->first());
-	}
+	}*/
 }
 
 template<typename T>
@@ -212,11 +212,11 @@ struct Spell{
 	ListV4<Rune> runes;
 
 	Spell(string name = "test", string wizard = "") : spellName(name), wizardName(wizard) {
-		cout << "Spell created: " << name << endl;
+		cout << "Hechizo creado: " << name << endl;
 	}
 
 	~Spell(){
-		cout << "Spell destroyed: " << spellName << endl;
+		cout << "Hechizo destruido: " << spellName << endl;
 	}
 
     void addRunes(const string runeChars) {
@@ -251,7 +251,7 @@ struct Spell{
             auto it = runes.first();
             while (it != nullptr) {
                 Rune* current = runes.get(it);
-                cout << "Rune " << current->type << " (" << current->x << ") is connected to: ";
+                cout << "Runa " << current->type << " (" << current->x << ") esta conectada a: ";
                 
                 // Print connected vertices and weights
                 auto yIt = current->y.first();
@@ -276,13 +276,8 @@ class Arcane{
     ListV4<string> underInvestigation;
 
 	void longestPathByEdge(Spell spell, bool first = true){
-		/*
-		if (it == nullptr) return;
-
-        if (!first) {
-			if (it == spell.runes.first()) 
-		}
-		*/
+		
+		//
     }
 
 	void readFile() {
@@ -305,13 +300,12 @@ class Arcane{
 			file >> n_vertex;
 			file.ignore();
 			getline(file, rune);
-			cout << "Adding runes..." << endl;
 			aux.addRunes(rune);
 			file >> n_edges;
 			file.ignore();
 			for (int i = 0; i < n_edges; i++) {
 				file >> x >> y >> z;
-				cout << "Adding adjacency for " << x << " " << y << " " << z << endl;
+				cout << "Agregando adyacencia para: " << x << " " << y << " " << z << endl;
 				aux.addEdge(x, y, z);
 			}
 			legalSpells.insert(legalSpells.last(), aux, false);
@@ -326,44 +320,16 @@ void writeFile(){
 }
 
 int main(){
-	/*
-    ListV4<int> a;
-    a.insert(a.first(), 2, false);
-    a.insert(a.first(), 1, false);
-
-    ListV4<int> b;
-    b.insert(b.first(), 3, false);
-    b.insert(b.first(), 4, false);
-
-    ListV4<int>::iterator it = a.first();
-
-    while (it != nullptr) {
-        int* aux = a.get(it);
-        ListV4<int>::iterator toDelete = it;
-        a.next(it) ;// Avanza el iterador antes de eliminar el nodo
-    	b.insert(b.last(), *aux, false);
-        //a.deleteNode(toDelete); // Elimina el nodo de la lista 'a'
-    }
-
-    it = b.first();
-	ListV4<int>::iterator lastNode = b.last();  // Obtiene el iterador del último nodo de 'b'
-    b.deleteNode(lastNode);  // Elimina el último nodo de 'b'
-    while (it != nullptr) {
-        int* aux = b.get(it);
-        cout << *aux << " ";
-        b.next(it);
-    }
-
-    */
+	
 	Arcane arcane;
 	arcane.readFile();
-	/*ListV4<Spell>::iterator it = arcane.legalSpells.first();
+	ListV4<Spell>::iterator it = arcane.legalSpells.first();
 	Spell* auxPtr = arcane.legalSpells.get(it);
 
 	if (auxPtr) {
 		cout << auxPtr->wizardName << endl;
 		auxPtr->printAdjacencyList();
-	}*/
+	}
 
     return 0;
 }
